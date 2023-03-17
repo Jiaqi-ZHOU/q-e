@@ -391,6 +391,7 @@
       ENDDO
     ENDDO
     !
+    print *, "JZHOU seitzkq nrr ", nrr, " nc1 ", nc1, " nc2 ", nc2, " nc3 ", nc3
     IF (nrr > 20 * nc1 * nc2 * nc3) CALL errore &
       ('wigner_seitzkq', 'too many WS points, try to increase the bound 20*nc1*nc2*nc3', 1)
     !
@@ -630,7 +631,11 @@
       ENDDO
     ENDDO
     !
-    IF (nrr > 20 * nc1 * nc2 * nc3) CALL errore('wigner_seitzg', 'too many WS points, try to increase the bound 20*nc1*nc2*nc3', 1)
+    print *, "JZHOU seitzg nrr ", nrr, " nc1 ", nc1, " nc2 ", nc2, " nc3 ", nc3
+    IF (nrr > 20 * nc1 * nc2 * nc3) then
+        ! CALL errore('wigner_seitzg', 'too many WS points, try to increase the bound 20*nc1*nc2*nc3', 1)
+        print *, 'WARNING: ', 'wigner_seitzg', 'too many WS points, try to increase the bound 20*nc1*nc2*nc3', 1
+    ENDIF
     !
     ! Now we compute the WS distances
     wslen(:) = 0.d0

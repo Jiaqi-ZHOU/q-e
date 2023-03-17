@@ -180,6 +180,7 @@
     !! BTE conductivity tensor with Magnetic field.
     REAL(KIND = DP), EXTERNAL :: w0gauss
     !! The derivative of wgauss:  an approximation to the delta function
+    REAL(KIND = DP) :: fi_check_out(3)
     !
     carrier_density(:) = zero
     xkf_all(:, :) = zero
@@ -283,13 +284,15 @@
     f_out(:, :, :, :) = zero
     sigma_bte(:, :, :) = zero
     error(:) = 1000
+    fi_check_out = 1000
     ! Now compute the Iterative solution for electron or hole
     WRITE(stdout, '(5x,a)') ' '
     WRITE(stdout, '(5x,a)') REPEAT('=',93)
     WRITE(stdout, '(5x,"Start solving iterative Boltzmann Transport Equation")')
     WRITE(stdout, '(5x,a/)') REPEAT('=',93)
     !
-    DO WHILE(MAXVAL(error) > eps6)
+    ! DO WHILE(MAXVAL(error) > eps6)
+    DO WHILE(abs(sum(fi_check_out)) > eps6)
       WRITE(stdout, '(5x,"Iteration number:", i10)') iter
       !
       IF (iter > mob_maxiter) THEN
@@ -353,7 +356,7 @@
       !
       IF (mp_mesh_k) THEN
         CALL k_avg(f_out, vkk_all, nb_sp, xkf_sp)
-        CALL print_mob_sym(f_out, bztoibz_mat, vkk_all, etf_all, wkf_all, ef0, sigma_bte, max_mob)
+        CALL print_mob_sym(f_out, bztoibz_mat, vkk_all, etf_all, wkf_all, ef0, sigma_bte, max_mob, fi_check_out=fi_check_out)
       ELSE
         CALL print_mob(f_out, vkk_all, etf_all, wkf_all, ef0, sigma_bte, max_mob)
       ENDIF
@@ -372,6 +375,9 @@
       f_out = zero
       !
       iter = iter + 1
+
+      !
+      write(stdout, *) "JZHOU ", fi_check_out
       !
       ! Save F_in to file:
       !IF (ncarrier > 1E5) THEN

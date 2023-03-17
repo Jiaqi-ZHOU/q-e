@@ -254,7 +254,7 @@
     !
     !-----------------------------------------------------------------------
     SUBROUTINE print_mob_sym(f_out, bztoibz_mat, vkk_all, etf_all, wkf_all, &
-                             ef0, sigma, max_mob, xkf_all, fi_check_out)
+                             ef0, sigma, max_mob, xkf_all)
     !-----------------------------------------------------------------------
     !!
     !! This routine prints the mobility using k-point symmetry.
@@ -311,7 +311,6 @@
     !! Compute the approximate theta function. Here computes Fermi-Dirac
     REAL(KIND = DP), EXTERNAL :: w0gauss
     !! The derivative of wgauss:  an approximation to the delta function
-    REAL(KIND = DP), INTENT(inout), OPTIONAL :: fi_check_out(3)
     REAL(KIND = DP) :: fi_check(3)
     !! Sum rule on population
     !
@@ -363,9 +362,6 @@
           CALL prtmob(itemp, sigma_tmp, carrier_density, fi_check, ef0(itemp), etemp)
         ENDIF
       ENDIF
-      if (present(fi_check_out)) then
-        fi_check_out = fi_check
-      endif
       sigma(:, :, itemp) = sigma_tmp(:, :)
     ENDDO ! temp
     !
